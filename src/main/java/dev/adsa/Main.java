@@ -12,7 +12,7 @@ public class Main extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception {    
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/main_menu_view.fxml"));
         Parent root = loader.load();
 
         primaryStage.setTitle("Student Manager");
