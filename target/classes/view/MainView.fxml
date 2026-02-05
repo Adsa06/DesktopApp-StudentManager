@@ -53,7 +53,7 @@
             <TextField />
             <Label text="Label" />
             <TextField />
-            <Button fx:id="showDialog" mnemonicParsing="false" text="ProvisionalDialog" />
+            <Button onAction="#showDialog" mnemonicParsing="false" text="ProvisionalDialog" />
          </children>
       </VBox>
    </left>
