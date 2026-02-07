@@ -13,7 +13,7 @@
 
 <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.adsa.controller.MainMenuController">
    <children>
-      <BorderPane fx:id="menuBorderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <BorderPane fx:id="bpMainMenu" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <top>
             <StackPane prefHeight="50.0" style="-fx-background-color: #DDDDDD;" BorderPane.alignment="CENTER">
                <children>
@@ -29,9 +29,6 @@
                </padding>
             </StackPane>
          </top>
-         <center>
-            <ListView prefHeight="350.0" prefWidth="342.0" BorderPane.alignment="CENTER" />
-         </center>
          <right>
             <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #DDDDDD;" BorderPane.alignment="CENTER">
                <children>
@@ -56,21 +53,53 @@
                   <ChoiceBox fx:id="cbCity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                   <Label text="Ciclo" />
                   <ChoiceBox fx:id="cbCycle" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <Label fx:id="lblAddStudentError" style="-fx-text-fill: #FF0000;" text="Rellene todos los campos" visible="false">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblAddDuplicatePhoneError" style="-fx-text-fill: #FF0000;" text="Telefono existente" visible="false" />
                   <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createStudent" text="Añadir">
                      <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="15.0" />
                      </VBox.margin></Button>
                </children>
             </VBox>
          </left>
+         <center>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <ListView fx:id="studentListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+               </children>
+            </VBox>
+         </center>
       </BorderPane>
-      <AnchorPane fx:id="overlay" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #00000033;" visible="false">
+      <AnchorPane fx:id="apUpdateForm" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #00000033;" visible="false">
          <children>
             <StackPane>
                <children>
-                  <Label text="Gestión de Alumnos" />
-                  <Label text="Sistema completo de administración CRUD" />
-                  <Button mnemonicParsing="false" onAction="#closeDialog" text="Cerrar" />
+                  <VBox prefHeight="200.0" style="-fx-background-color: #DDDDDD;" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label text="Actualizar Alumno" />
+                        <Label text="Nombre" />
+                        <TextField fx:id="formName" />
+                        <Label text="Apellidos" />
+                        <TextField fx:id="formSurname" />
+                        <Label text="Edad" />
+                        <TextField fx:id="formAge" />
+                        <Label text="Ciudad" />
+                        <ChoiceBox fx:id="formCity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <Label text="Ciclo" />
+                        <ChoiceBox fx:id="formCycle" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <Label fx:id="lblUpdateStudentError" style="-fx-text-fill: #FF0000;" text="Rellene todos los campos" visible="false">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#closeDialog" text="Cerrar" />
+                        <Button mnemonicParsing="false" onAction="#updateStudent" text="Actualizar" />
+                     </children>
+                  </VBox>
                </children>
             </StackPane>
          </children>

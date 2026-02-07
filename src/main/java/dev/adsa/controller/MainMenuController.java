@@ -1,13 +1,23 @@
 package dev.adsa.controller;
 
+import java.io.IOException;
+import java.util.function.Consumer;
+
+import dev.adsa.exceptions.InsufficientDataException;
 import dev.adsa.model.City;
 import dev.adsa.model.Cycle;
 import dev.adsa.model.Student;
 import dev.adsa.service.StudentService;
 import dev.adsa.utilities.MongoUtil;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
@@ -17,10 +27,10 @@ public class MainMenuController {
     private StudentService studentService;
 
     @FXML
-    private BorderPane menuBorderPane;
+    private BorderPane bpMainMenu;
 
     @FXML
-    private AnchorPane overlay;
+    private AnchorPane apUpdateForm;
 
     @FXML
     private TextField inputName;
@@ -41,43 +51,155 @@ public class MainMenuController {
     private ChoiceBox<Cycle> cbCycle;
 
     @FXML
+    private TextField formName;
+
+    @FXML
+    private TextField formSurname;
+
+    @FXML
+    private TextField formAge;
+
+    @FXML
+    private ChoiceBox<City> formCity;
+
+    @FXML
+    private ChoiceBox<Cycle> formCycle;
+    
+    @FXML
+    private Label lblAddStudentError;
+
+    @FXML
+    private Label lblUpdateStudentError;
+
+    @FXML
+    private ListView<Student> studentListView;
+
+    private Student selectedStudent;
+
+    @FXML
     public void initialize() {
         studentService = new StudentService();
         // Establecer los valores de los ChoiceBox
         cbCity.getItems().setAll(City.values());
         cbCycle.getItems().setAll(Cycle.values());
 
+        // Establecer los valores de los ChoiceBox en el formulario de actualización
+        formCity.getItems().setAll(City.values());
+        formCycle.getItems().setAll(Cycle.values());
+
         // Formato para que solo se puedan introducir números en el campo de edad
         inputAge.setTextFormatter(new TextFormatter<>(change -> {
             return change.getControlNewText().matches("\\d*") ? change : null;
         }));
+        formAge.setTextFormatter(new TextFormatter<>(change -> {
+            return change.getControlNewText().matches("\\d*") ? change : null;
+        }));
+        loadStudents();
     }
 
     @FXML
     private void createStudent() {
         String name = inputName.getText();
         String surname = inputSurname.getText();
-        int age = Integer.parseInt(inputAge.getText());
+        int age = inputAge.getText().isEmpty() ? 0 : Integer.parseInt(inputAge.getText());
         String phone = inputPhone.getText();
         City city = cbCity.getValue();
         Cycle cycle = cbCycle.getValue();
         
-        Student student = new Student(name, surname, phone, age, city, cycle);
-        studentService.addStudent(student);
+        try {
+            Student student = studentService.validateAddStudent(name, surname, phone, age, city, cycle);
+
+            // Limpiar los campos después de crear el alumno
+            inputName.clear();
+            inputSurname.clear();
+            inputAge.clear();
+            inputPhone.clear();
+            cbCity.setValue(null);
+            cbCycle.setValue(null);
+            lblAddStudentError.setVisible(false);
+            studentListView.getItems().add(student);
+        } catch (InsufficientDataException ide) {            
+            lblAddStudentError.setVisible(true);
+        } catch (Exception e) {
+            System.out.println("Error al crear el alumno: " + e.getMessage());
+        }
     }
 
-    @FXML
-    private void showDialog() {
-        overlay.setVisible(true);
-        overlay.setDisable(false);
-        menuBorderPane.setDisable(true);
+    private void loadStudents() {
+        studentListView.getItems().clear();
+        studentListView.getItems().addAll(studentService.getAllStudents());
+        studentListView.setCellFactory(listView -> new ListCell<>() {
+            @Override
+            protected void updateItem(Student student, boolean empty) {
+                super.updateItem(student, empty);
+                if (empty || student == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/student_item_view.fxml"));
+                        setGraphic(loader.load());
+                        StudentItemController controller = loader.getController();
+                        controller.setStudentData(student);
+                        controller.setShowDialog(showDialog);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
+
+    Consumer<Student> showDialog = (student) -> {
+
+        selectedStudent = student;
+
+        formName.setText(student.getName());
+        formSurname.setText(student.getSurname());
+        formAge.setText(String.valueOf(student.getAge()));
+        formCity.setValue(student.getCity());
+        formCycle.setValue(student.getCycle());
+
+        apUpdateForm.setVisible(true);
+        apUpdateForm.setDisable(false);
+        bpMainMenu.setDisable(true);
+    };
 
     @FXML
     private void closeDialog() {
-        overlay.setVisible(false);
-        menuBorderPane.setDisable(false);
-        overlay.setDisable(true);
+        apUpdateForm.setVisible(false);
+        bpMainMenu.setDisable(false);
+        apUpdateForm.setDisable(true);
+    }
+
+    @FXML
+    private void updateStudent() {
+        String name = formName.getText();
+        String surname = formSurname.getText();
+        int age = formAge.getText().isEmpty() ? 0 : Integer.parseInt(formAge.getText());
+        City city = formCity.getValue();
+        Cycle cycle = formCycle.getValue();
+        try {
+            studentService.validateUpdateStudent(
+                selectedStudent, 
+                name, 
+                surname,
+                age, 
+                city, 
+                cycle
+            );
+        
+            apUpdateForm.setVisible(false);
+            bpMainMenu.setDisable(false);
+            apUpdateForm.setDisable(true);
+            lblUpdateStudentError.setVisible(false);
+
+        } catch (InsufficientDataException ide) {
+            lblUpdateStudentError.setVisible(true);
+        } catch (Exception e) {
+            System.out.println("Error al actualizar el alumno: " + e.getMessage());
+        }
+        loadStudents();
     }
     
     @FXML
@@ -86,4 +208,6 @@ public class MainMenuController {
         Platform.exit();
         System.exit(0);
     }
+
+    
 }

@@ -1,15 +1,15 @@
 package dev.adsa.model;
 
 public class Student {
-    /*
-    Nombre, Apellidos, Teléfono, Edad, Ciudad y Ciclo formativo
- */
+
     private String name;
     private String surname;
     private String phone;
     private int age;
     private City city;
     private Cycle cycle;
+
+    public Student() {}
 
     public Student(String name, String surname, String phone, int age, City city, Cycle cycle) {
         this.name = name;

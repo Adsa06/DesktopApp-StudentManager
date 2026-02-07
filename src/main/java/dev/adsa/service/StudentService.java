@@ -1,29 +1,43 @@
 package dev.adsa.service;
 
-import org.bson.Document;
+import java.util.List;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-
+import dev.adsa.dao.StudentDao;
+import dev.adsa.exceptions.InsufficientDataException;
+import dev.adsa.model.City;
+import dev.adsa.model.Cycle;
 import dev.adsa.model.Student;
-import dev.adsa.utilities.MongoUtil;
 
 public class StudentService {
-    
-    private MongoCollection<Document> collection;
+
+    private StudentDao studentDao;
 
     public StudentService() {
-        MongoDatabase db = MongoUtil.getDatabase();
-        collection = db.getCollection("students");
+        studentDao = new StudentDao();
     }
 
-    public void addStudent(Student student) {
-        Document doc = new Document("nombre", student.getName())
-            .append("apellidos", student.getSurname())
-            .append("telefono", student.getPhone())
-            .append("edad", student.getAge())
-            .append("ciudad", student.getCity())
-            .append("ciclo", student.getCycle());
-        collection.insertOne(doc);
+    public Student validateAddStudent(String name, String surname, String phone, int age, City city, Cycle cycle) throws InsufficientDataException {
+        if (name.isEmpty() || surname.isEmpty() || phone.isEmpty() || age <= 0 || city == null || cycle == null) {
+            throw new InsufficientDataException("Todos los campos son obligatorios.");
+        }
+
+        Student student = new Student(name, surname, phone, age, city, cycle);
+        studentDao.addStudent(student);
+        return student;
+    }
+
+    public List<Student> getAllStudents() {
+        return studentDao.getAllStudents();
+    }
+
+    public void validateUpdateStudent(Student oldStudent, String name, String surname, int age, City city, Cycle cycle) throws InsufficientDataException {
+        if (name.isEmpty() || surname.isEmpty() || age <= 0 || city == null || cycle == null) {
+            throw new InsufficientDataException("Todos los campos son obligatorios.");
+        }
+        studentDao.updateStudent(name, surname, age, city, cycle, oldStudent);
+    }
+
+    public void deleteStudent(List<Student> studentsToDelete) {
+        studentDao.deleteStudent(studentsToDelete);
     }
 }

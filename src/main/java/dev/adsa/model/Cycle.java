@@ -22,4 +22,17 @@ public enum Cycle {
     public String toString() {
         return name;
     }
+
+        public static Cycle fromDescription(String desc) {
+        Cycle foundCycle = null;
+        Cycle[] cycles = Cycle.values();
+        int i = 0;
+        while (i < cycles.length && foundCycle == null) {
+            if (cycles[i].getName().equalsIgnoreCase(desc)) {
+                foundCycle = cycles[i];
+            }
+            i++;
+        }
+        return foundCycle;
+    }
 }

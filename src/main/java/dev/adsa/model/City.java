@@ -21,4 +21,17 @@ public enum City {
     public String toString() {
         return name;
     }
+
+    public static City fromDescription(String desc) {
+        City foundCity = null;
+        City[] cities = City.values();
+        int i = 0;
+        while (i < cities.length && foundCity == null) {
+            if (cities[i].getName().equalsIgnoreCase(desc)) {
+                foundCity = cities[i];
+            }
+            i++;
+        }
+        return foundCity;
+    }
 }

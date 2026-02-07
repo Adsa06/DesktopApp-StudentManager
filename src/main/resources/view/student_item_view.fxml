@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.adsa.controller.StudentItemController">
+   <children>
+      <CheckBox fx:id="checkBox" mnemonicParsing="false" />
+      <Label fx:id="lblName" text="Nombre" />
+      <Label fx:id="lblSurname" text="Apellidos" />
+      <Label fx:id="lblPhone" text="Telefono" />
+      <Label fx:id="lblAge" text="Edad" />
+      <Label fx:id="lblCity" text="Ciudad" />
+      <Label fx:id="lblCycle" text="Ciclo" />
+      <Button mnemonicParsing="false" fx:id="btnUpdate" text="Actualizar" />
+   </children>
+</HBox>
