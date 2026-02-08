@@ -47,8 +47,6 @@ public class StudentService {
     /** 
      * Devuelve una lista con todos los estudiantes en la base de datos.
      * @return lista de estudiantes
-     * 
-     * @see StudentDao#getAllStudents()
      */
     public List<Student> getAllStudents() {
         return studentDao.getAllStudents();
