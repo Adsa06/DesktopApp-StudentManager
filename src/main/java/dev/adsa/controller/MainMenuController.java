@@ -1,6 +1,8 @@
 package dev.adsa.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import dev.adsa.exceptions.InsufficientDataException;
@@ -10,8 +12,6 @@ import dev.adsa.model.Student;
 import dev.adsa.service.StudentService;
 import dev.adsa.utilities.MongoUtil;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
@@ -76,6 +76,11 @@ public class MainMenuController {
 
     private Student selectedStudent;
 
+    private List<Student> studentsToDelete = new ArrayList<>();
+
+    @FXML
+    private ChoiceBox<Cycle> cbFilter;
+
     @FXML
     public void initialize() {
         studentService = new StudentService();
@@ -87,6 +92,8 @@ public class MainMenuController {
         formCity.getItems().setAll(City.values());
         formCycle.getItems().setAll(Cycle.values());
 
+        cbFilter.getItems().setAll(Cycle.values());
+
         // Formato para que solo se puedan introducir números en el campo de edad
         inputAge.setTextFormatter(new TextFormatter<>(change -> {
             return change.getControlNewText().matches("\\d*") ? change : null;
@@ -94,7 +101,8 @@ public class MainMenuController {
         formAge.setTextFormatter(new TextFormatter<>(change -> {
             return change.getControlNewText().matches("\\d*") ? change : null;
         }));
-        loadStudents();
+
+        loadStudents(studentService.getAllStudents());
     }
 
     @FXML
@@ -125,9 +133,9 @@ public class MainMenuController {
         }
     }
 
-    private void loadStudents() {
+    private void loadStudents(List<Student> studentsList) {
         studentListView.getItems().clear();
-        studentListView.getItems().addAll(studentService.getAllStudents());
+        studentListView.getItems().addAll(studentsList);
         studentListView.setCellFactory(listView -> new ListCell<>() {
             @Override
             protected void updateItem(Student student, boolean empty) {
@@ -142,6 +150,12 @@ public class MainMenuController {
                         StudentItemController controller = loader.getController();
                         controller.setStudentData(student);
                         controller.setShowDialog(showDialog);
+                        controller.setSelected((s) -> {
+                            if(studentsToDelete.contains(s))
+                                studentsToDelete.remove(s);
+                            else
+                                studentsToDelete.add(s);
+                        });
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -199,7 +213,15 @@ public class MainMenuController {
         } catch (Exception e) {
             System.out.println("Error al actualizar el alumno: " + e.getMessage());
         }
-        loadStudents();
+        loadStudents(studentService.getAllStudents());
+    }
+
+    @FXML
+    private void deleteStudent() {
+        System.out.println("Alumnos a eliminar: " + studentsToDelete);
+        studentService.deleteStudent(studentsToDelete);
+        studentsToDelete.clear(); // Clear the list after deletion
+        loadStudents(studentService.getAllStudents());
     }
     
     @FXML
@@ -209,5 +231,22 @@ public class MainMenuController {
         System.exit(0);
     }
 
+    @FXML
+    private void applyFilter() {
+        System.out.println("------------------------------------");
+        Cycle selectedCycle = cbFilter.getValue();
+        if (selectedCycle != null) {
+            List<Student> filteredStudents = studentService.findByCycle(selectedCycle);
+            for (Student s : filteredStudents) {
+                System.out.println("Filtered student: " + s.getName() + " " + s.getSurname() + " - Cycle: " + s.getCycle());
+            }
+            loadStudents(filteredStudents);
+        }
+    }
+    
+    @FXML
+    private void eliminateFilter() {
+        loadStudents(studentService.getAllStudents());
+    }
     
 }

@@ -40,4 +40,8 @@ public class StudentService {
     public void deleteStudent(List<Student> studentsToDelete) {
         studentDao.deleteStudent(studentsToDelete);
     }
+
+    public List<Student> findByCycle(Cycle cycle) {
+        return studentDao.findByCycle(cycle);
+    }
 }

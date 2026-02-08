@@ -36,6 +36,12 @@ public class StudentItemController {
     @FXML
     private Button btnUpdate;
 
+    private Consumer<Student> setStudentToDelete;
+
+    public void setSelected(Consumer<Student> setStudentToDelete) {
+        this.setStudentToDelete = setStudentToDelete;
+    }
+
     public void setStudentData(Student student) {
         lblName.setText(student.getName());
         lblSurname.setText(student.getSurname());
@@ -50,5 +56,11 @@ public class StudentItemController {
             Student student = new Student(lblName.getText(), lblSurname.getText(), lblPhone.getText(), Integer.parseInt(lblAge.getText()), City.fromDescription(lblCity.getText()), Cycle.fromDescription(lblCycle.getText()));
             showDialog.accept(student);
         });
+    }
+
+    @FXML
+    private void toggleSelection() {
+        Student student = new Student(lblName.getText(), lblSurname.getText(), lblPhone.getText(), Integer.parseInt(lblAge.getText()), City.fromDescription(lblCity.getText()), Cycle.fromDescription(lblCycle.getText()));
+        setStudentToDelete.accept(student);
     }
 }

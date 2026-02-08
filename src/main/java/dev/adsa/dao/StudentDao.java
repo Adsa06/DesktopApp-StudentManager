@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -74,6 +73,7 @@ public class StudentDao {
             .map(Student::getPhone)
             .collect(Collectors.toList());
 
+        phones.forEach(phone -> System.out.println("Phone to delete: " + phone));
         // Crear el filtro para eliminar los documentos que tengan un phone en la lista
         Bson filter = Filters.in("phone", phones);
 
@@ -81,4 +81,21 @@ public class StudentDao {
         collection.deleteMany(filter);
     }
 
+    public List<Student> findByCycle(Cycle cycle) {
+        List<Student> students = new ArrayList<>();
+
+        for (Document doc : collection.find(new Document("cycle", cycle))) {
+            Student student = new Student();
+            student.setName(doc.getString("name"));
+            student.setSurname(doc.getString("surname"));
+            student.setPhone(doc.getString("phone"));
+            student.setAge(doc.getInteger("age"));
+            student.setCity(City.valueOf(doc.getString("city")));
+            student.setCycle(Cycle.valueOf(doc.getString("cycle")));
+            students.add(student);
+            System.out.println("Found student: " + student.getName() + " " + student.getSurname() + " - Cycle: " + student.getCycle());
+        }
+
+        return students;
+    }
 }

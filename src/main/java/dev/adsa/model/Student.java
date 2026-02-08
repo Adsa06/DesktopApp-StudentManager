@@ -67,4 +67,23 @@ public class Student {
     public void setCycle(Cycle cycle) {
         this.cycle = cycle;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean isSame;
+        if (this == o)
+            isSame = true;
+        else if (o == null || getClass() != o.getClass())
+            isSame = false;
+        else {
+            Student student = (Student) o;
+            isSame = phone != null && phone.equals(student.phone);
+        }
+        return isSame;
+    }
+
+    @Override
+    public int hashCode() {
+        return phone != null ? phone.hashCode() : 0;
+    }
 }
