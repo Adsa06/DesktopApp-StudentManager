@@ -22,65 +22,93 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+
+/** Controlador de la pantalla principal */
 public class MainMenuController {
 
+    /** Servicio de estudiantes */
     private StudentService studentService;
 
+    /** Panel principal del programa */
     @FXML
     private BorderPane bpMainMenu;
 
+    /** Formulario de edición de estudiantes */
     @FXML
     private AnchorPane apUpdateForm;
 
+    /** Campo del nombre de la creacion de estudiante */
     @FXML
     private TextField inputName;
 
+    /** Campo del apellido de la creacion de estudiante */
     @FXML
     private TextField inputSurname;
 
+    /** Campo de la edad de la creacion de estudiante */
     @FXML
     private TextField inputAge;
 
+    /** Campo del teléfono de la creacion de estudiante */
     @FXML
     private TextField inputPhone;
 
+    /** Desplegable de la ciudad de la creacion de estudiante */
     @FXML
     private ChoiceBox<City> cbCity;
 
+    /** Desplegable del ciclo formativo de la creacion de estudiante */
     @FXML
     private ChoiceBox<Cycle> cbCycle;
 
+    /** Campos del nombre de la actualizacion de un estudiante */
     @FXML
     private TextField formName;
 
+    /** Campos del apellido de la actualización de un estudiante */
     @FXML
     private TextField formSurname;
 
+    /** Campos de la edad de la actualización de un estudiante */
     @FXML
     private TextField formAge;
 
+    /** Campos de la ciudad de la actualización de un estudiante */
     @FXML
     private ChoiceBox<City> formCity;
 
+    /** Campos del ciclo formativo de la actualización de un estudiante */
     @FXML
     private ChoiceBox<Cycle> formCycle;
     
+    /** Etiqueta de error de la creacion de un estudiante */
     @FXML
     private Label lblAddStudentError;
 
+    /** Etiqueta de error de la actualización de un estudiante */
     @FXML
     private Label lblUpdateStudentError;
 
+    /** ListView de estudiantes */
     @FXML
     private ListView<Student> studentListView;
 
+    /** Estudiante seleccionado para actualización */
     private Student selectedStudent;
 
+    /** Estudiantes seleccionados para eliminación */
     private List<Student> studentsToDelete = new ArrayList<>();
 
+    /** ChoiceBox para filtrar estudiantes por ciclo formativo */
     @FXML
     private ChoiceBox<Cycle> cbFilter;
 
+    /**
+     * Inicializa el controlador de la pantalla principal.
+     * Establece los valores de los ChoiceBox y formatea para que solo se
+     * puedan introducir números en los campos de edad.
+     * Carga la lista de estudiantes en el ListView.
+     */
     @FXML
     public void initialize() {
         studentService = new StudentService();
@@ -105,6 +133,15 @@ public class MainMenuController {
         loadStudents(studentService.getAllStudents());
     }
 
+    /**
+     * Crea un nuevo estudiante con la información introducida en los campos de texto y
+     * los desplegables de la interfaz de usuario.
+     * Lanza una excepción InsufficientDataException si alguno de los campos no se ha
+     * proporcionado.
+     * Lanza una excepción Exception si se produce un error al crear el estudiante.
+     * Si se produce un error al crear el estudiante, se muestra un mensaje de error en la
+     * interfaz de usuario.
+     */
     @FXML
     private void createStudent() {
         String name = inputName.getText();
@@ -133,6 +170,12 @@ public class MainMenuController {
         }
     }
 
+    /**
+     * Carga la lista de estudiantes pasada en el ListView.
+     * Establece una celda de lista para cada item de la lista.
+     * 
+     * @param studentsList lista de estudiantes a cargar
+     */
     private void loadStudents(List<Student> studentsList) {
         studentListView.getItems().clear();
         studentListView.getItems().addAll(studentsList);
@@ -149,13 +192,7 @@ public class MainMenuController {
                         setGraphic(loader.load());
                         StudentItemController controller = loader.getController();
                         controller.setStudentData(student);
-                        controller.setShowDialog(showDialog);
-                        controller.setSelected((s) -> {
-                            if(studentsToDelete.contains(s))
-                                studentsToDelete.remove(s);
-                            else
-                                studentsToDelete.add(s);
-                        });
+                        controller.setFunction(showDialog, setStudentToDelete);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -164,6 +201,22 @@ public class MainMenuController {
         });
     }
 
+    /** 
+     * Función para marcar o desmarcar un estudiante para eliminar. Si el estudiante ya está marcado, se desmarca. Si no está marcado, se marca.
+     */
+    Consumer<Student> setStudentToDelete = (student) -> {
+        if (studentsToDelete.contains(student))
+            studentsToDelete.remove(student);
+        else
+            studentsToDelete.add(student);
+    };
+
+    /**
+     * Muestra un diálogo para editar el estudiante seleccionado.
+     * Al hacer clic en el botón de actualizar en el item del estudiante, se establece el estudiante seleccionado
+     * en el formulario de edición y se muestra el formulario. El menu principal se deshabilita para evitar que el usuario
+     * interactúe con el mientras el formulario de edición está abierto.
+     */
     Consumer<Student> showDialog = (student) -> {
 
         selectedStudent = student;
@@ -179,6 +232,10 @@ public class MainMenuController {
         bpMainMenu.setDisable(true);
     };
 
+    /**
+     * Cierra el formulario de edición de estudiante y vuelve a la pantalla
+     * principal.
+     */
     @FXML
     private void closeDialog() {
         apUpdateForm.setVisible(false);
@@ -186,6 +243,12 @@ public class MainMenuController {
         apUpdateForm.setDisable(true);
     }
 
+    /**
+     * Actualiza un estudiante en la base de datos.
+     * 
+     * @throws InsufficientDataException si alguno de los campos no se ha proporcionado
+     * @throws Exception si ocurre cualquier otro error
+     */
     @FXML
     private void updateStudent() {
         String name = formName.getText();
@@ -216,6 +279,11 @@ public class MainMenuController {
         loadStudents(studentService.getAllStudents());
     }
 
+    /**
+     * Elimina la lista de estudiantes pasada como parámetro.
+     * Después de eliminar los estudiantes, carga la lista de estudiantes
+     * con todos los estudiantes en la base de datos.
+     */
     @FXML
     private void deleteStudent() {
         System.out.println("Alumnos a eliminar: " + studentsToDelete);
@@ -224,6 +292,12 @@ public class MainMenuController {
         loadStudents(studentService.getAllStudents());
     }
     
+    /**
+     * Cierra la aplicación.
+     * 
+     * Cierra la conexión con MongoDB y
+     * sale de la aplicación.
+     */
     @FXML
     private void closeApp() {
         MongoUtil.cerrar();
@@ -231,19 +305,23 @@ public class MainMenuController {
         System.exit(0);
     }
 
+    /**
+     * Aplica el filtro de búsqueda por ciclo formativo y carga la lista
+     * de estudiantes que se ajustan a ese ciclo formativo.
+     */
     @FXML
     private void applyFilter() {
-        System.out.println("------------------------------------");
         Cycle selectedCycle = cbFilter.getValue();
         if (selectedCycle != null) {
             List<Student> filteredStudents = studentService.findByCycle(selectedCycle);
-            for (Student s : filteredStudents) {
-                System.out.println("Filtered student: " + s.getName() + " " + s.getSurname() + " - Cycle: " + s.getCycle());
-            }
             loadStudents(filteredStudents);
         }
     }
     
+    
+    /**
+     * Elimina el filtro de búsqueda y carga la lista de estudiantes completa.
+     */
     @FXML
     private void eliminateFilter() {
         loadStudents(studentService.getAllStudents());

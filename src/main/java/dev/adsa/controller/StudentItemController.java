@@ -10,38 +10,46 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 
+/** Controlador del item de estudiante */
 public class StudentItemController {
 
-    @FXML
-    private CheckBox checkBox;
-
+    /** Etiqueta para mostrar el nombre */
     @FXML
     private Label lblName;
 
+    /** Etiqueta para mostrar el apellido */
     @FXML
     private Label lblSurname;
 
+    /** Etiqueta para mostrar el teléfono */
     @FXML
     private Label lblPhone;
 
+    /** Etiqueta para mostrar la edad */
     @FXML
     private Label lblAge;
 
+    /** Etiqueta para mostrar la ciudad */
     @FXML
     private Label lblCity;
 
+    /** Etiqueta para mostrar el ciclo */
     @FXML
     private Label lblCycle;
 
+    /** Boton para actualizar el estudiante */
     @FXML
     private Button btnUpdate;
 
-    private Consumer<Student> setStudentToDelete;
+    /** CheckBox para marcar el estudiante */
+    @FXML
+    private CheckBox checkBox;
 
-    public void setSelected(Consumer<Student> setStudentToDelete) {
-        this.setStudentToDelete = setStudentToDelete;
-    }
-
+    /**
+     * Establece la información del estudiante en el item.
+     * 
+     * @param student estudiante a establecer
+     */
     public void setStudentData(Student student) {
         lblName.setText(student.getName());
         lblSurname.setText(student.getSurname());
@@ -51,16 +59,24 @@ public class StudentItemController {
         lblCycle.setText(student.getCycle().toString());
     }
 
-    public void setShowDialog(Consumer<Student> showDialog) {
+
+    /**
+     * Establece dos funcionesos para interactuar con el item del estudiante.
+     * La primera función se encarga de mostrar un diálogo para editar el estudiante seleccionado.
+     * La segunda función se encarga de eliminar el estudiante seleccionado.
+     * 
+     * @param showDialog función que se encarga de mostrar el diálogo para editar el estudiante
+     * @param setStudentToDelete función que se encarga de eliminar el estudiante
+    */
+    public void setFunction(Consumer<Student> showDialog, Consumer<Student> setStudentToDelete) {
         btnUpdate.setOnAction(e -> {
             Student student = new Student(lblName.getText(), lblSurname.getText(), lblPhone.getText(), Integer.parseInt(lblAge.getText()), City.fromDescription(lblCity.getText()), Cycle.fromDescription(lblCycle.getText()));
             showDialog.accept(student);
         });
-    }
 
-    @FXML
-    private void toggleSelection() {
-        Student student = new Student(lblName.getText(), lblSurname.getText(), lblPhone.getText(), Integer.parseInt(lblAge.getText()), City.fromDescription(lblCity.getText()), Cycle.fromDescription(lblCycle.getText()));
-        setStudentToDelete.accept(student);
+        checkBox.setOnAction(e -> {
+            Student student = new Student(lblName.getText(), lblSurname.getText(), lblPhone.getText(), Integer.parseInt(lblAge.getText()), City.fromDescription(lblCity.getText()), Cycle.fromDescription(lblCycle.getText()));
+            setStudentToDelete.accept(student);
+        });
     }
 }

@@ -7,7 +7,7 @@
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.adsa.controller.StudentItemController">
    <children>
-      <CheckBox fx:id="checkBox" mnemonicParsing="false" onAction="#toggleSelection" />
+      <CheckBox fx:id="checkBox" mnemonicParsing="false" />
       <Label fx:id="lblName" text="Nombre" />
       <Label fx:id="lblSurname" text="Apellidos" />
       <Label fx:id="lblPhone" text="Telefono" />
