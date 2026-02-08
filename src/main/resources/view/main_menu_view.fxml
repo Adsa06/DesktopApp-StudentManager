@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
 <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.adsa.controller.MainMenuController">
    <children>
@@ -78,35 +79,74 @@
             </VBox>
          </center>
       </BorderPane>
-      <AnchorPane fx:id="apUpdateForm" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #00000033;" visible="false">
-         <children>
-            <StackPane>
-               <children>
-                  <VBox prefHeight="200.0" style="-fx-background-color: #DDDDDD;" BorderPane.alignment="CENTER">
-                     <children>
-                        <Label text="Actualizar Alumno" />
-                        <Label text="Nombre" />
-                        <TextField fx:id="formName" />
-                        <Label text="Apellidos" />
-                        <TextField fx:id="formSurname" />
-                        <Label text="Edad" />
-                        <TextField fx:id="formAge" />
-                        <Label text="Ciudad" />
-                        <ChoiceBox fx:id="formCity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-                        <Label text="Ciclo" />
-                        <ChoiceBox fx:id="formCycle" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-                        <Label fx:id="lblUpdateStudentError" style="-fx-text-fill: #FF0000;" text="Rellene todos los campos" visible="false">
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Button mnemonicParsing="false" onAction="#closeDialog" text="Cerrar" />
-                        <Button mnemonicParsing="false" onAction="#updateStudent" text="Actualizar" />
-                     </children>
-                  </VBox>
-               </children>
-            </StackPane>
-         </children>
-      </AnchorPane>
+<AnchorPane fx:id="apUpdateForm"
+            maxHeight="1.7976931348623157E308"
+            maxWidth="1.7976931348623157E308"
+            style="-fx-background-color: rgba(0,0,0,0.45);"
+            visible="false">
+
+   <children>
+      <StackPane AnchorPane.topAnchor="0"
+                 AnchorPane.bottomAnchor="0"
+                 AnchorPane.leftAnchor="0"
+                 AnchorPane.rightAnchor="0">
+<children>
+         <VBox prefWidth="420"
+               spacing="10"
+               alignment="TOP_CENTER"
+               style="-fx-background-color: #ffffff;
+                      -fx-padding: 20;
+                      -fx-background-radius: 10;
+                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.2, 0, 5);">
+
+            <children>
+               <!-- TÍTULO -->
+               <Label text="Actualizar Alumno"
+                      style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+               <!-- FORMULARIO -->
+               <Label text="Nombre" />
+               <TextField fx:id="formName" />
+
+               <Label text="Apellidos" />
+               <TextField fx:id="formSurname" />
+
+               <Label text="Edad" />
+               <TextField fx:id="formAge" />
+
+               <Label text="Ciudad" />
+               <ChoiceBox fx:id="formCity" maxWidth="Infinity" />
+
+               <Label text="Ciclo" />
+               <ChoiceBox fx:id="formCycle" maxWidth="Infinity" />
+
+               <!-- ERROR -->
+               <Label fx:id="lblUpdateStudentError"
+                      text="Rellene todos los campos"
+                      visible="false"
+                      style="-fx-text-fill: #d32f2f; -fx-font-size: 12px;" />
+
+               <!-- BOTONES -->
+               <HBox spacing="10" alignment="CENTER_RIGHT">
+                  <children>
+                     <Button mnemonicParsing="false"
+                             onAction="#closeDialog"
+                             text="Cerrar"
+                             style="-fx-background-color: #e0e0e0;" />
+
+                     <Button mnemonicParsing="false"
+                             onAction="#updateStudent"
+                             text="Actualizar"
+                             style="-fx-background-color: #1976d2; -fx-text-fill: white;" />
+                  </children>
+               </HBox>
+
+            </children>
+         </VBox>
+</children>
+      </StackPane>
+   </children>
+</AnchorPane>
+
    </children>
 </StackPane>

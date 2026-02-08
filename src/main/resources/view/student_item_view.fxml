@@ -5,15 +5,27 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.adsa.controller.StudentItemController">
+<HBox xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="dev.adsa.controller.StudentItemController"
+      alignment="CENTER_LEFT"
+      spacing="12"
+      style="-fx-padding: 8 12 8 12; -fx-background-color: #f9f9f9; -fx-border-color: #e0e0e0; -fx-border-radius: 6; -fx-background-radius: 6;">
+
    <children>
       <CheckBox fx:id="checkBox" mnemonicParsing="false" />
-      <Label fx:id="lblName" text="Nombre" />
-      <Label fx:id="lblSurname" text="Apellidos" />
-      <Label fx:id="lblPhone" text="Telefono" />
-      <Label fx:id="lblAge" text="Edad" />
-      <Label fx:id="lblCity" text="Ciudad" />
-      <Label fx:id="lblCycle" text="Ciclo" />
-      <Button fx:id="btnUpdate" mnemonicParsing="false" text="Actualizar" />
+
+      <Label fx:id="lblName" text="Nombre" prefWidth="120" style="-fx-font-weight: bold;" />
+      <Label fx:id="lblSurname" text="Apellidos" prefWidth="150" />
+      <Label fx:id="lblPhone" text="Telefono" prefWidth="110" />
+      <Label fx:id="lblAge" text="Edad" prefWidth="60" alignment="CENTER" />
+      <Label fx:id="lblCity" text="Ciudad" prefWidth="120" />
+      <Label fx:id="lblCycle" text="Ciclo" prefWidth="140" />
+
+      <Button fx:id="btnUpdate"
+              mnemonicParsing="false"
+              text="Actualizar"
+              style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-background-radius: 4;" />
    </children>
 </HBox>
+
