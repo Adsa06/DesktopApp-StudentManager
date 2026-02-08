@@ -1,6 +1,4 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
-    "css.lint.unknownVendorSpecificProperties": "ignore",
-    "css.lint.vendorPrefix": "ignore",
     "maven.view": "flat"
 }
